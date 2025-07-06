@@ -1,0 +1,66 @@
+USE EmployeeDB;
+GO
+
+--Create Procedure
+CREATE PROCEDURE GetEmployeesByDept
+    @DeptId INT
+AS
+BEGIN
+    SELECT * FROM Employees
+    WHERE Dept_Id = @DeptId;
+END;
+
+
+EXEC GetEmployeesByDept @DeptId =102;
+
+--Create Function
+CREATE FUNCTION GetAnnualSalary(@MonthlySalary DECIMAL(10,2))
+RETURNS DECIMAL(10,2)
+AS
+BEGIN
+    RETURN @MonthlySalary * 12;
+END;
+
+SELECT Employee_Name, dbo.GetAnnualSalary(Salary) AS AnnualSalary
+FROM Employees;
+
+-- Create Procedure with Parameters and Conditional Logic
+CREATE PROCEDURE GetEmployeesByCriteria
+    @DeptId INT,
+    @MinSalary DECIMAL(10,2)
+AS
+BEGIN
+    IF @MinSalary > 0
+    BEGIN
+        SELECT * FROM Employees
+        WHERE Dept_Id = @DeptId AND Salary >= @MinSalary;
+    END
+    ELSE
+    BEGIN
+        SELECT * FROM Employees
+        WHERE Dept_Id = @DeptId;
+    END
+END;
+
+EXEC GetEmployeesByCriteria @DeptId = 101, @MinSalary = 25000;
+
+-- Create Function with Parameters and Conditional Logic
+CREATE FUNCTION GetPerformanceLevel(@Salary DECIMAL(10,2))
+RETURNS VARCHAR(50)
+AS
+BEGIN
+    DECLARE @Level VARCHAR(50);
+
+    IF @Salary >= 80000
+        SET @Level = 'Excellent';
+    ELSE IF @Salary >= 50000
+        SET @Level = 'Good';
+    ELSE
+        SET @Level = 'Needs Improvement';
+
+    RETURN @Level;
+END;
+
+SELECT Employee_Name, Salary, dbo.GetPerformanceLevel(Salary) AS Performance
+FROM Employees;
+
