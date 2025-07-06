@@ -1,4 +1,4 @@
-Stored Procedure and Function in SQL Server
+Stored Procedure and Function in SQL Server:
 
 This project uses the EmployeeDB database containing an Employees table.
 
